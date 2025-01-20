@@ -1,0 +1,256 @@
+# 2 Spicy
+2spicy: # Name used for the .game file
+  display_name: "2 Spicy" # Name Display for the script
+  launcher_path: "elf" # path for the game exec
+  filesystem: "ext2" # File system to use for the mount
+  steps: # Steps to perform
+    - file: "2spicy.bin"
+      copy_dirs:
+        - "disk0"
+
+# After Burner Climax (SDX)
+abclisdx:
+  display_name: "After Burner Climax (SDX)"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "abc.bin"
+      copy_dirs:
+        - "disk0"
+        - "disk1"
+
+# Ghost Squad Evolution
+ghostsev:
+  display_name: "Ghost Squad Evolution"
+  launcher_path: "vsg_l"
+  filesystem: "ext2"
+  steps:
+    - file: "gsevo.bin"
+      copy_dirs:
+        - "disk0"
+        - "disk1"
+
+# Harley Davidson King of the Road
+hdkotr:
+  display_name: "Harley Davidson King of the Road"
+  launcher_path: "elf"
+  filesystem: "ext2"
+  steps:
+    - file: "harley.bin"
+      copy_dirs:
+        - "disk0"
+    - file: "harley_fs.bin"
+      copy_dirs: []
+      destination_subfolder: "fs"
+    - file: "harley_fs2.bin"
+      copy_dirs: []
+      destination_subfolder: "fs"
+
+# The House of the Dead 4 (Rev A)
+hotd4:
+  display_name: "The House of the Dead 4 (Rev A)"
+  launcher_path: "elf"
+  filesystem: "ext2"
+  steps:
+    - file: "hotd4.bin"
+      copy_dirs:
+        - "disk0"
+
+# The House of the Dead 4 Special (NO GOOD DUMP FOUND)
+hotd4sp:
+  display_name: "The House of the Dead 4 Special"
+  launcher_path: "elf"
+  filesystem: "ext2"
+  steps:
+    - file: "hotd4sp.bin"
+      copy_dirs:
+        - "disk0"
+
+# The House of the Dead EX
+hotdex:
+  display_name: "The House of the Dead EX (Japan)"
+  launcher_path: "elf"
+  filesystem: "ext2"
+  steps:
+    - file: "hotd4ex.bin"
+      copy_dirs:
+        - "disk0"
+
+# Hummer Extreme Edition
+hummerxt:
+  display_name: "Hummer Extreme Edition"
+  launcher_path: "elf"
+  filesystem: "ext2"
+  steps:
+    - file: "hummer.bin"
+      copy_dirs:
+        - "disk0"
+
+# Initial D Arcade Stage 4 (Rev B)
+initiad4b:
+  display_name: "Initial D Arcade Stage 4 (Rev B)"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "id4.bin"
+      copy_dirs:
+        - "disk0"
+
+# Initial D 4 (Export) (Rev D)
+initiad4ex:
+  display_name: "Initial D 4 (Export) (Rev D)"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "id4exp.bin"
+      copy_dirs:
+        - "disk0"
+
+# Initial D 5 (Export) (2.0)
+initiad5exa:
+  display_name: "Initial D 5 (Export) (2.0)"
+  launcher_path: ""
+  filesystem: "ext3"
+  steps:
+    - file: "initiald5.bin"
+      copy_dirs:
+        - "disk0"
+    - file: "id5_data.bin"
+      copy_dirs: []
+      destination_subfolder: "data"
+
+# Let's Go Jungle
+letsgoju:
+  display_name: "Let's Go Jungle"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "lgj.bin"
+      copy_dirs:
+        - "disk0"
+
+# Outrun 2 SP SDX Rev A
+outr2sdx:
+  display_name: "Outrun 2 SP SDX (Rev A)"
+  launcher_path: "Jennifer"
+  filesystem: "ext2"
+  steps:
+    - file: "or2.bin"
+      copy_dirs:
+        - "disk0"
+
+# Outrun 2 SP SDX (Bootleg)
+outr2sdxg:
+  display_name: "Outrun 2 SP SDX (Bootleg)"
+  launcher_path: "Jennifer"
+  filesystem: "ext2"
+  steps:
+    - file: "or2g.bin"
+      copy_dirs:
+        - "disk0"
+
+# Primeval Hunt
+primevah:
+  display_name: "Primeval Hunt"
+  launcher_path: "prog"
+  filesystem: "ext2"
+  steps:
+    - file: "primevil.bin"
+      copy_dirs:
+        - "disk0"
+
+# R-Tuned: Ultimate Street Racing
+rtuned:
+  display_name: "R-Tuned: Ultimate Street Racing"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "rtuned.bin"
+      copy_dirs:
+        - "disk0"
+
+# Rambo (Export)
+rambo:
+  display_name: "Rambo (Export)"
+  launcher_path: "elf"
+  filesystem: "ext2"
+  steps:
+    - file: "rambo.bin"
+      copy_dirs:
+        - "disk0"
+
+# Sega Race-TV (Export)
+segartv:
+  display_name: "Sega Race-TV (Export)"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "segartv.bin"
+      copy_dirs:
+        - "disk0"
+
+# Virtua Fighter 5
+vf5:
+  display_name: "Virtua Fighter 5"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "vf5.bin"
+      copy_dirs:
+        - "disk0"
+        - "disk1"
+
+# Virtua Fighter 5 Rev C
+vf5c:
+  display_name: "Virtua Fighter 5 (Rev C)"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "vf5c.bin"
+      copy_dirs:
+        - "disk0"
+        - "disk1"
+    - file: "vf5c_rom.bin"
+      copy_dirs: []
+      destination_subfolder: "rom"
+
+# Virtua Fighter 5 Final Showdown
+vf5fs:
+  display_name: "Virtua Fighter 5 Final Showdown"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "vf5fs.bin"
+      copy_dirs:
+        - "disk0"
+        - "disk1"
+    - file: "vf5fs_ext.bin"
+      extra_copy_dirs:
+        - source: "rom"
+          destination: "rom"
+
+# Virtua Fighter 5 R
+vf5r:
+  display_name: "Virtua Fighter 5 R"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "vf5r.bin"
+      copy_dirs:
+        - "disk0"
+    - file: "vf5r_rom.bin"
+      copy_dirs: []
+      destination_subfolder: "rom"
+  final_move:
+    - source: "ext/rom/objset"
+      destination: "rom/objset"
+
+# Virtua Tennis 3
+# psmash3:
+# display_name: "Virtua Tennis 3 (Rev C)"
+# launcher_path: "vt3_Lindbergh"
+# filesystem: "ext2"
+# steps:
+#  - file: "vt3.bin"
+#    copy_dirs:
+#      - "disk0"
