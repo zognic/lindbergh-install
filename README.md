@@ -53,3 +53,19 @@ hdkotr:
     - file: "harley_fs2.bin"
       copy_dirs: []
       destination_subfolder: "fs"
+```
+
+## Usage
+1. Place the `games_config.yml` file in the same directory as the script.
+2. Ensure that the required `.bin` files are present in the working directory.
+3. Run the script using the following command:
+   ```bash
+   python3 lindbergh_installer.py
+   ```
+4. Follow the on-screen instructions to select a game to install, install all games, or exit.
+
+## Notes
+- The script reads the game configurations from the games_config.yml file. Each game's configuration includes the required .bin files, directories to copy, and additional processing steps.
+- For games with multiple .bin files, the script processes each file according to the specified steps, including post-processing actions like file moves.
+- If the target directory for a game already exists, the script skips the installation to avoid overwriting existing data.
+- Launcher files (.game) are automatically created at the specified launcher_path in the configuration file or in the root directory if no launcher_path is provided.
