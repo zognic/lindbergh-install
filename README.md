@@ -41,6 +41,8 @@ This Python script automates the installation of games for Lindbergh systems by 
 | Virtua Fighter 5 Final Showdown | vf5fs      | vf5fs.bin, vf5fs_ext.bin          | rom               | ext2       |
 | Virtua Fighter 5 R              | vf5r       | vf5r.bin, vf5r_rom.bin            | rom               | ext2       |
 
+## Looking for the right files?
+If you're looking for the correct files for installation, performing a quick search with the keyword **SEGA_Lindbergh_YELLOW-RomVault** on Archives  may help you locate the appropriate `.bin` files needed for this script.
 
 
 ## Configuration Example (YAML)
