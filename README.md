@@ -1,6 +1,6 @@
 # Lindbergh Game Installer Script
 
-This Python script automates the installation of games for Lindbergh systems on Batocera by mounting `.bin` images, extracting their content, and placing them in the correct directories. It also supports additional post-processing, such as moving specific files or folders and creating `.game` launcher files for each installed game.
+This Python script automates the installation of games for Lindbergh systems on [Batocera](https://batocera.org/) by mounting `.bin` images, extracting their content, and placing them in the correct directories. It also supports additional post-processing, such as moving specific files or folders and creating `.game` launcher files for each installed game.
 
 ## Features
 - Mount `.bin` files using Linux file systems (`ext2`, `ext3`).
