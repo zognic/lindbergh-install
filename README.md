@@ -91,3 +91,8 @@ hdkotr:
 - For games with multiple .bin files, the script processes each file according to the specified steps, including post-processing actions like file moves.
 - If the target directory for a game already exists, the script skips the installation to avoid overwriting existing data.
 - Launcher files (.game) are automatically created at the specified launcher_path in the configuration file or in the root directory if no launcher_path is provided.
+
+
+## Youtube Explanation
+https://www.youtube.com/watch?v=qN5M_liIpx0
+
