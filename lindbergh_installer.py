@@ -136,20 +136,22 @@ def process_game(game_key, game_config):
 		print(f"{RED}The destination directory {dest_dir} already exists. Skipping game.{RESET}")
 		return
 
-	os.makedirs(dest_dir, exist_ok=True)
+	installFailure = False
 	steps = game_config.get("steps", [])
 	for step in steps:
-		process_step(step, dest_dir)
+		if not process_step(step, dest_dir):
+			installFailure = True
 
-	# Handle final move operations
-	final_moves = game_config.get("final_move", [])
-	if final_moves:
-		process_final_move(final_moves, dest_dir)
+	if not installFailure:
+		# Handle final move operations
+		final_moves = game_config.get("final_move", [])
+		if final_moves:
+			process_final_move(final_moves, dest_dir)
 
-	# Create the launcher file
-	create_launcher(game_key, game_config, dest_dir)
+		# Create the launcher file
+		create_launcher(game_key, game_config, dest_dir)
 
-	print(f"{GREEN}Installation completed for {game_config.get('display_name', game_key)}{RESET}")
+		print(f"{GREEN}Installation completed for {game_config.get('display_name', game_key)}{RESET}")
 
 def main():
 	CONFIG_FILE = "games_config.yml"
