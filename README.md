@@ -25,7 +25,7 @@ This Python script automates the installation of games for Lindbergh systems on 
 | The House of the Dead 4 (Rev A) | hotd4      | hotd4.bin                         | elf               | ext2       |
 | The House of the Dead 4 Special | hotd4sp    | hotd4sp.bin                       | elf               | ext2       |
 | The House of the Dead EX        | hotdex     | hotd4ex.bin                       | elf               | ext2       |
-| Hummer Extreme Edition          | hummerxt   | hummer.bin                        | elf               | ext2       |
+| Hummer Extreme Edition          | hummerxt   | hummer.bin                        |                   | ext2       |
 | Initial D Arcade Stage 4 (Rev B)| initiad4b  | id4.bin                           |                   | ext2       |
 | Initial D 4 (Export) (Rev D)    | initiad4ex | id4exp.bin                        |                   | ext2       |
 | Initial D 5 (Export) (2.0)      | initiad5exa| initiald5.bin, id5_data.bin       | data              | ext3       |
