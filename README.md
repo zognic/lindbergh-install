@@ -25,7 +25,8 @@ This Python script automates the installation of games for Lindbergh systems on 
 | The House of the Dead 4 (Rev A) | hotd4      | hotd4.bin                         | elf               | ext2       |
 | The House of the Dead 4 Special | hotd4sp    | hotd4sp.bin                       | elf               | ext2       |
 | The House of the Dead EX        | hotdex     | hotd4ex.bin                       | elf               | ext2       |
-| Hummer Extreme Edition          | hummerxt   | hummer.bin                        | elf               | ext2       |
+| Hummer Extreme Edition          | hummerxt   | hummer.bin                        |                   | ext2       |
+| Hummer SDLX                     | hummer     | hummer.bin                        |                   | ext2       |
 | Initial D Arcade Stage 4 (Rev B)| initiad4b  | id4.bin                           |                   | ext2       |
 | Initial D 4 (Export) (Rev D)    | initiad4ex | id4exp.bin                        |                   | ext2       |
 | Initial D 5 (Export) (2.0)      | initiad5exa| initiald5.bin, id5_data.bin       | data              | ext3       |
@@ -91,6 +92,8 @@ hdkotr:
 - For games with multiple .bin files, the script processes each file according to the specified steps, including post-processing actions like file moves.
 - If the target directory for a game already exists, the script skips the installation to avoid overwriting existing data.
 - Launcher files (.game) are automatically created at the specified launcher_path in the configuration file or in the root directory if no launcher_path is provided.
+- Both Hummer SLDX and Hummer Extreme Edition use the same hummer.bin file. This installer does not distinguish between the two versions automatically.
+It is up to you to identify which version you have and select the correct option in the installer accordingly.
 
 
 ## Youtube Explanation
