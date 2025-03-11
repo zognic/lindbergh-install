@@ -79,7 +79,17 @@ hotdex:
 # Hummer Extreme Edition
 hummerxt:
   display_name: "Hummer Extreme Edition"
-  launcher_path: "elf"
+  launcher_path: ""
+  filesystem: "ext2"
+  steps:
+    - file: "hummer.bin"
+      copy_dirs:
+        - "disk0"
+
+# Hummer SDLX
+hummer:
+  display_name: "Hummer SDLX"
+  launcher_path: ""
   filesystem: "ext2"
   steps:
     - file: "hummer.bin"
