@@ -37,6 +37,15 @@ def copy_content(src_dir, dest_dir):
 			dest_file = os.path.join(dest_dir, rel_path)
 			os.makedirs(os.path.dirname(dest_file), exist_ok=True)
 			run_command(f"dd if=\"{src_file}\" of=\"{dest_file}\" bs=4M status=none")
+            
+def process_remove_dirs(remove_dirs, dest_dir):
+	for rel_path in remove_dirs:
+		target = os.path.join(dest_dir, rel_path)
+		if os.path.exists(target):
+			print(f"{YELLOW}Removing unused libs: {target}{RESET}")
+			run_command(f'rm -rf "{target}"')
+		else:
+			print(f"{RED}Libs not found, skipping removal: {target}{RESET}")
 
 def process_step(step, dest_dir):
 	file_path = os.path.join(INSTALL_DIR, step.get("file"))
@@ -75,6 +84,11 @@ def process_step(step, dest_dir):
 		destination = os.path.join(dest_dir, extra.get("destination"))
 		os.makedirs(destination, exist_ok=True)
 		copy_content(source, destination)
+        
+	# Handle removal of unused libs
+	remove_dirs = step.get("remove_dirs", [])
+	if remove_dirs:
+		process_remove_dirs(remove_dirs, dest_dir)
 
 	print(f"{CYAN}Unmounting {file_path}...{RESET}")
 	run_command(f"umount \"{MOUNT_POINT}\"")

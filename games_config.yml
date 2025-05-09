@@ -29,6 +29,8 @@ ghostsev:
       copy_dirs:
         - "disk0"
         - "disk1"
+      remove_dirs:
+        - "drv"
 
 # Harley Davidson King of the Road
 hdkotr:
@@ -39,6 +41,8 @@ hdkotr:
     - file: "harley.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
     - file: "harley_fs.bin"
       copy_dirs: []
       destination_subfolder: "fs"
@@ -65,6 +69,8 @@ hotd4sp:
     - file: "hotd4sp.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # The House of the Dead EX
 hotdex:
@@ -75,6 +81,8 @@ hotdex:
     - file: "hotd4ex.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Hummer Extreme Edition
 hummerxt:
@@ -85,6 +93,8 @@ hummerxt:
     - file: "hummer.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Hummer SDLX
 hummer:
@@ -95,6 +105,8 @@ hummer:
     - file: "hummer.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Initial D Arcade Stage 4 (Rev B)
 initiad4b:
@@ -148,6 +160,8 @@ outr2sdx:
     - file: "or2.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Outrun 2 SP SDX (Bootleg)
 outr2sdxg:
@@ -158,6 +172,8 @@ outr2sdxg:
     - file: "or2g.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Primeval Hunt
 primevah:
@@ -168,6 +184,8 @@ primevah:
     - file: "primevil.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # R-Tuned: Ultimate Street Racing
 rtuned:
@@ -178,6 +196,9 @@ rtuned:
     - file: "rtuned.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
+        - "drv.old"
 
 # Rambo (Export)
 rambo:
@@ -198,6 +219,8 @@ segartv:
     - file: "segartv.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Virtua Fighter 5
 vf5:
@@ -220,6 +243,8 @@ vf5c:
       copy_dirs:
         - "disk0"
         - "disk1"
+      remove_dirs:
+        - "drv"
     - file: "vf5c_rom.bin"
       copy_dirs: []
       destination_subfolder: "rom"
@@ -234,6 +259,8 @@ vf5fs:
       copy_dirs:
         - "disk0"
         - "disk1"
+      remove_dirs:
+        - "drv"
     - file: "vf5fs_ext.bin"
       extra_copy_dirs:
         - source: "rom"
@@ -248,6 +275,8 @@ vf5r:
     - file: "vf5r.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
     - file: "vf5r_rom.bin"
       copy_dirs: []
       destination_subfolder: "rom"
