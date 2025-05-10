@@ -2,9 +2,9 @@
 2spicy: # Name used for the .game file
   display_name: "2 Spicy" # Name Display for the script
   launcher_path: "elf" # path for the game exec
-  filesystem: "ext2" # File system to use for the mount
   steps: # Steps to perform
     - file: "2spicy.bin"
+      filesystem: "ext2" # File system to use for the mount (ext2 by default)
       copy_dirs:
         - "disk0"
 
@@ -12,7 +12,6 @@
 abclisdx:
   display_name: "After Burner Climax (SDX)"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "abc.bin"
       copy_dirs:
@@ -23,22 +22,24 @@ abclisdx:
 ghostsev:
   display_name: "Ghost Squad Evolution"
   launcher_path: "vsg_l"
-  filesystem: "ext2"
   steps:
     - file: "gsevo.bin"
       copy_dirs:
         - "disk0"
         - "disk1"
+      remove_dirs:
+        - "drv"
 
 # Harley Davidson King of the Road
 hdkotr:
   display_name: "Harley Davidson King of the Road"
   launcher_path: "elf"
-  filesystem: "ext2"
   steps:
     - file: "harley.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
     - file: "harley_fs.bin"
       copy_dirs: []
       destination_subfolder: "fs"
@@ -47,60 +48,62 @@ hdkotr:
       destination_subfolder: "fs"
 
 # The House of the Dead 4 (Rev A)
-hotd4:
+hotd4a:
   display_name: "The House of the Dead 4 (Rev A)"
   launcher_path: "elf"
-  filesystem: "ext2"
   steps:
     - file: "hotd4.bin"
       copy_dirs:
         - "disk0"
 
 # The House of the Dead 4 Special (NO GOOD DUMP FOUND)
-hotd4sp:
-  display_name: "The House of the Dead 4 Special"
-  launcher_path: "elf"
-  filesystem: "ext2"
-  steps:
-    - file: "hotd4sp.bin"
-      copy_dirs:
-        - "disk0"
+#hotd4sp:
+#  display_name: "The House of the Dead 4 Special"
+#  launcher_path: "elf"
+#  steps:
+#    - file: "hotd4sp.bin"
+#      copy_dirs:
+#        - "disk0"
+#      remove_dirs:
+#        - "drv"
 
 # The House of the Dead EX
 hotdex:
   display_name: "The House of the Dead EX (Japan)"
   launcher_path: "elf"
-  filesystem: "ext2"
   steps:
-    - file: "hotd4ex.bin"
+    - file: "hotdex.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Hummer Extreme Edition
 hummerxt:
   display_name: "Hummer Extreme Edition"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "hummer.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
-# Hummer SDLX
-hummer:
-  display_name: "Hummer SDLX"
-  launcher_path: ""
-  filesystem: "ext2"
-  steps:
-    - file: "hummer.bin"
-      copy_dirs:
-        - "disk0"
+# Hummer SDLX (NO GOOD DUMP FOUND)
+#hummer:
+#  display_name: "Hummer SDLX"
+#  launcher_path: ""
+#  steps:
+#    - file: "hummer.bin"
+#      copy_dirs:
+#        - "disk0"
+#      remove_dirs:
+#        - "drv"
 
 # Initial D Arcade Stage 4 (Rev B)
 initiad4b:
   display_name: "Initial D Arcade Stage 4 (Rev B)"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "id4.bin"
       copy_dirs:
@@ -110,7 +113,6 @@ initiad4b:
 initiad4ex:
   display_name: "Initial D 4 (Export) (Rev D)"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "id4exp.bin"
       copy_dirs:
@@ -120,12 +122,13 @@ initiad4ex:
 initiad5exa:
   display_name: "Initial D 5 (Export) (2.0)"
   launcher_path: ""
-  filesystem: "ext3"
   steps:
     - file: "initiald5.bin"
+      filesystem: "ext3"
       copy_dirs:
         - "disk0"
     - file: "id5_data.bin"
+      filesystem: "ext3"
       copy_dirs: []
       destination_subfolder: "data"
 
@@ -133,7 +136,6 @@ initiad5exa:
 letsgoju:
   display_name: "Let's Go Jungle"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "lgj.bin"
       copy_dirs:
@@ -143,47 +145,51 @@ letsgoju:
 outr2sdx:
   display_name: "Outrun 2 SP SDX (Rev A)"
   launcher_path: "Jennifer"
-  filesystem: "ext2"
   steps:
     - file: "or2.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Outrun 2 SP SDX (Bootleg)
 outr2sdxg:
   display_name: "Outrun 2 SP SDX (Bootleg)"
   launcher_path: "Jennifer"
-  filesystem: "ext2"
   steps:
     - file: "or2g.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Primeval Hunt
 primevah:
   display_name: "Primeval Hunt"
   launcher_path: "prog"
-  filesystem: "ext2"
   steps:
     - file: "primevil.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # R-Tuned: Ultimate Street Racing
 rtuned:
   display_name: "R-Tuned: Ultimate Street Racing"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "rtuned.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
+        - "drv.old"
 
 # Rambo (Export)
 rambo:
   display_name: "Rambo (Export)"
   launcher_path: "elf"
-  filesystem: "ext2"
   steps:
     - file: "rambo.bin"
       copy_dirs:
@@ -193,61 +199,64 @@ rambo:
 segartv:
   display_name: "Sega Race-TV (Export)"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "segartv.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
 
 # Virtua Fighter 5
 vf5:
   display_name: "Virtua Fighter 5"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "vf5.bin"
       copy_dirs:
         - "disk0"
         - "disk1"
 
-# Virtua Fighter 5 Rev C
-vf5c:
-  display_name: "Virtua Fighter 5 (Rev C)"
+# Virtua Fighter 5 (Rev E)(ver C)
+vf5e:
+  display_name: "Virtua Fighter 5 (Rev E)(ver C)"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "vf5c.bin"
       copy_dirs:
         - "disk0"
         - "disk1"
+      remove_dirs:
+        - "drv"
     - file: "vf5c_rom.bin"
       copy_dirs: []
       destination_subfolder: "rom"
 
-# Virtua Fighter 5 Final Showdown
-vf5fs:
-  display_name: "Virtua Fighter 5 Final Showdown"
+# Virtua Fighter 5 Final Showdown (Rev A, v2.0)
+vf5fsa2:
+  display_name: "Virtua Fighter 5 Final Showdown (Rev A, v2.0)"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "vf5fs.bin"
       copy_dirs:
         - "disk0"
         - "disk1"
+      remove_dirs:
+        - "drv"
     - file: "vf5fs_ext.bin"
       extra_copy_dirs:
         - source: "rom"
           destination: "rom"
 
-# Virtua Fighter 5 R
+# Virtua Fighter 5 R (Rev G)
 vf5r:
-  display_name: "Virtua Fighter 5 R"
+  display_name: "Virtua Fighter 5 R (Rev G)"
   launcher_path: ""
-  filesystem: "ext2"
   steps:
     - file: "vf5r.bin"
       copy_dirs:
         - "disk0"
+      remove_dirs:
+        - "drv"
     - file: "vf5r_rom.bin"
       copy_dirs: []
       destination_subfolder: "rom"
