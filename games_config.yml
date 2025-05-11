@@ -131,7 +131,8 @@ initiad5exa:
       filesystem: "ext3"
       copy_dirs: []
       destination_subfolder: "data"
-
+      remove_dirs:
+        - "drv"
 # Let's Go Jungle
 letsgoju:
   display_name: "Let's Go Jungle"
