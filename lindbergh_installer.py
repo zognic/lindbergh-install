@@ -1,217 +1,213 @@
 #!/usr/bin/env python3
-import os
-import sys
-import yaml
-import subprocess
+import os, sys, yaml, subprocess, time
 
-# ANSI color codes for styling
-RESET = "\033[0m"
-CYAN = "\033[36m"
-YELLOW = "\033[33m"
-GREEN = "\033[32m"
-RED = "\033[31m"
+# ANSI color codes for terminal styling
+COLOR = {
+    "reset": "\033[0m",
+    "cyan": "\033[36m",
+    "yellow": "\033[33m",
+    "green": "\033[32m",
+    "red": "\033[31m"
+}
 
+# === Global Settings and Constants ===
 INSTALL_DIR = os.getcwd()
-MOUNT_POINT = "/tmp"
+MOUNT_POINT = "/tmp/lindbergh_mount"
+EXCLUDES = ["drv", "drv.old", "lost+found", "System Volume Information"]
 
-def run_command(command, capture_output=False):
-	if capture_output:
-		result = subprocess.run(command, shell=True, capture_output=True)
-		try:
-			result.stdout = result.stdout.decode("utf-8", errors="replace")
-			result.stderr = result.stderr.decode("utf-8", errors="replace")
-		except AttributeError:
-			pass
-		return result
-	else:
-		return subprocess.run(command, shell=True)
+# Execute a shell command silently (no output)
 
-def copy_content(src_dir, dest_dir):
-	"""Copy the contents of src_dir into dest_dir."""
-	find_cmd = f"find \"{src_dir}\" -type f"
-	result = run_command(find_cmd, capture_output=True)
-	if result.returncode == 0:
-		files_to_copy = result.stdout.strip().splitlines()
-		for src_file in files_to_copy:
-			rel_path = os.path.relpath(src_file, src_dir)
-			dest_file = os.path.join(dest_dir, rel_path)
-			os.makedirs(os.path.dirname(dest_file), exist_ok=True)
-			run_command(f"dd if=\"{src_file}\" of=\"{dest_file}\" bs=4M status=none")
-            
-def process_remove_dirs(remove_dirs, dest_dir):
-	for rel_path in remove_dirs:
-		target = os.path.join(dest_dir, rel_path)
-		if os.path.exists(target):
-			print(f"{YELLOW}Removing unused libs: {target}{RESET}")
-			run_command(f'rm -rf "{target}"')
-		else:
-			print(f"{RED}Libs not found, skipping removal: {target}{RESET}")
+# Runs a shell command silently without producing output.
+def run(cmd):
+    return subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-def process_step(step, dest_dir):
-	file_path = os.path.join(INSTALL_DIR, step.get("file"))
-	if not os.path.isfile(file_path):
-		print(f"{RED}File {file_path} not found. Skipping step.{RESET}")
-		return False
 
-	print(f"{CYAN}Processing file: {file_path}{RESET}")
-	fs_type = step.get("filesystem", "ext2")
-	mount_cmd = f"mount -t {fs_type} \"{file_path}\" \"{MOUNT_POINT}\""
+# Attempts to unmount the mount point safely, ignoring errors.
+def safe_unmount():
+    run(f"umount {MOUNT_POINT} 2>/dev/null || true")
 
-	result = run_command(mount_cmd)
-	if result.returncode != 0:
-		print(f"{RED}Error mounting {file_path}{RESET}")
-		return False
+# === Main Image Processing Logic ===
 
-	os.makedirs(dest_dir, exist_ok=True)
+# Mounts the image, copies required files and folders, then unmounts.
+# Supports conditional copying of full image content if no specific folders are listed.
+def process_step(step, dest):
+    image_path = os.path.join(INSTALL_DIR, step["file"])
+    fs_type = step.get("filesystem", "ext2")
+    subfolder = step.get("destination_subfolder")
 
-	# Copy specified directories
-	copy_dirs = step.get("copy_dirs", [])
-	for directory in copy_dirs:
-		dir_path = os.path.join(MOUNT_POINT, directory)
-		copy_content(dir_path, dest_dir)
+    # Skip this step if the image file is missing.
+    if not os.path.isfile(image_path):
+        print(f"{COLOR['red']}Missing image file: {image_path}{COLOR['reset']}")
+        return False
 
-	# Handle destination subfolder for all contents
-	destination_subfolder = step.get("destination_subfolder")
-	if destination_subfolder:
-		dest_subfolder_path = os.path.join(dest_dir, destination_subfolder)
-		os.makedirs(dest_subfolder_path, exist_ok=True)
-		copy_content(MOUNT_POINT, dest_subfolder_path)
+    os.makedirs(MOUNT_POINT, exist_ok=True)
+    # Attempt to mount the image using the specified filesystem.
+    if run(f"mount -t {fs_type} \"{image_path}\" \"{MOUNT_POINT}\"").returncode != 0:
+        print(f"{COLOR['red']}Failed to mount {image_path}{COLOR['reset']}")
+        return False
 
-	# Handle extra copy directories
-	extra_copy_dirs = step.get("extra_copy_dirs", [])
-	for extra in extra_copy_dirs:
-		source = os.path.join(MOUNT_POINT, extra.get("source"))
-		destination = os.path.join(dest_dir, extra.get("destination"))
-		os.makedirs(destination, exist_ok=True)
-		copy_content(source, destination)
-        
-	# Handle removal of unused libs
-	remove_dirs = step.get("remove_dirs", [])
-	if remove_dirs:
-		process_remove_dirs(remove_dirs, dest_dir)
+    time.sleep(0.5)
+    os.makedirs(dest, exist_ok=True)
 
-	print(f"{CYAN}Unmounting {file_path}...{RESET}")
-	run_command(f"umount \"{MOUNT_POINT}\"")
-	print(f"{GREEN}Done processing file: {file_path}{RESET}")
-	return True
+    tasks = []
+    for folder in step.get("copy_dirs", []):
+        src = os.path.join(MOUNT_POINT, folder)
+        dst = dest
+        if subfolder:
+            dst = os.path.join(dest, subfolder)
+            os.makedirs(dst, exist_ok=True)
+        tasks.append((src, dst))
+    # If no specific folders to copy are given, copy the whole image to the subfolder.
+    if not step.get("copy_dirs") and subfolder:
+        src = MOUNT_POINT
+        dst = os.path.join(dest, subfolder)
+        os.makedirs(dst, exist_ok=True)
+        tasks.append((src, dst))
 
-def process_final_move(final_moves, dest_dir):
-	"""Handle the final move operations after all other steps are completed."""
-	for move in final_moves:
-		source = os.path.join(dest_dir, move.get("source"))
-		destination = os.path.join(dest_dir, move.get("destination"))
-	
-		if not os.path.exists(source):
-			print(f"{RED}Source directory {source} does not exist. Skipping move.{RESET}")
-			continue
-	
-		# Ensure the destination directory exists
-		os.makedirs(destination, exist_ok=True)
-		print(f"{CYAN}Moving content from {source} to {destination}{RESET}")
-	
-		# Move all contents of source into destination
-		for item in os.listdir(source):
-			item_path = os.path.join(source, item)
-			destination_path = os.path.join(destination, item)
-	
-			# Move file or directory
-			try:
-				if os.path.isdir(item_path):
-					os.rename(item_path, destination_path)
-				else:
-					os.replace(item_path, destination_path)
-			except Exception as e:
-				print(f"{RED}Error moving {item_path} to {destination_path}: {e}{RESET}")
-	
-		# Remove the empty source directory
-		try:
-			os.rmdir(source)
-			print(f"{GREEN}Successfully moved contents from {source} to {destination} and cleaned up.{RESET}")
-		except OSError as e:
-			print(f"{RED}Could not remove directory {source}: {e}{RESET}")
+    for entry in step.get("extra_copy_dirs", []):
+        src = os.path.join(MOUNT_POINT, entry["source"])
+        dst = os.path.join(dest, entry["destination"])
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        tasks.append((src, dst))
 
-def create_launcher(game_key, game_config, dest_dir):
-	"""Create the .game launcher file in the specified path."""
-	launcher_path = game_config.get("launcher_path", "")
-	launcher_dir = os.path.join(dest_dir, launcher_path) if launcher_path else dest_dir
-	os.makedirs(launcher_dir, exist_ok=True)
 
-	launcher_file = os.path.join(launcher_dir, f"{game_key}.game")
-	try:
-		with open(launcher_file, "w") as f:
-			f.write(f"# Launcher file for {game_key}\n")
-		print(f"{GREEN}Launcher file created at {launcher_file}{RESET}")
-	except Exception as e:
-		print(f"{RED}Failed to create launcher file: {e}{RESET}")
+    # Count how many files will be copied, ignoring excluded directories.
+    def count_all_files():
+        total = 0
+        for src, _ in tasks:
+            if not os.path.exists(src):
+                continue
+            for root, _, files in os.walk(src):
+                if any(part in EXCLUDES for part in root.split(os.sep)):
+                    continue
+                total += len(files)
+        return total
 
-def process_game(game_key, game_config):
-	dest_dir = os.path.join(INSTALL_DIR, game_key)
-	if os.path.isdir(dest_dir):
-		print(f"{RED}The destination directory {dest_dir} already exists. Skipping game.{RESET}")
-		return
+    total_files = count_all_files()
+    # If nothing to copy, skip the rest of the step.
+    if total_files == 0:
+        print(f"{COLOR['yellow']}Nothing to copy from {image_path}{COLOR['reset']}")
+        safe_unmount()
+        return True
 
-	os.makedirs(dest_dir, exist_ok=True)
-	steps = game_config.get("steps", [])
-	for step in steps:
-		process_step(step, dest_dir)
+    print(f"{COLOR['cyan']}Processing {os.path.basename(image_path)} ({total_files} files){COLOR['reset']}")
+    copied = 0
+    update_step = max(1, total_files // 100)
 
-	# Handle final move operations
-	final_moves = game_config.get("final_move", [])
-	if final_moves:
-		process_final_move(final_moves, dest_dir)
+    for src, dst in tasks:
+        if not os.path.exists(src):
+            print(f"{COLOR['yellow']}Warning: Source path does not exist: {src}{COLOR['reset']}")
+            continue
 
-	# Create the launcher file
-	create_launcher(game_key, game_config, dest_dir)
+        cmd = [
+            "rsync", "-a", "--no-inc-recursive", "--out-format=%n",
+            *[f"--exclude={e}" for e in EXCLUDES],
+            f"{src}/", f"{dst}/"
+        ]
+        try:
+            with subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True) as p:
+                for _ in p.stdout:
+                    copied += 1
+                    if copied % update_step == 0 or copied == total_files:
+                        pct = min(100, int((copied / total_files) * 100))
+                        bar = "#" * (pct // 4) + "." * (25 - pct // 4)
+                        print(f"\r[{bar}] {pct:3}%", end="", flush=True)
+        except Exception as e:
+            print(f"\n{COLOR['red']}Error during copy: {e}{COLOR['reset']}")
 
-	print(f"{GREEN}Installation completed for {game_config.get('display_name', game_key)}{RESET}")
+    if copied < total_files:
+        bar = "#" * 25
+        print("\r[{}] 100%".format(bar), end="", flush=True)
 
+    print()
+    safe_unmount()
+    return True
+
+
+# Creates a placeholder .game file so Batocera can detect the game.
+def create_launcher(game_key, config, dest_dir):
+    launcher_path = config.get("launcher_path", "")
+    target_dir = os.path.join(dest_dir, launcher_path) if launcher_path else dest_dir
+    os.makedirs(target_dir, exist_ok=True)
+    launcher_file = os.path.join(target_dir, f"{game_key}.game")
+    with open(launcher_file, "w") as f:
+        f.write(f"# Launcher for {game_key}\n")
+    print(f"{COLOR['green']}Launcher created: {launcher_file}{COLOR['reset']}")
+
+
+# Loads and parses the games_config.yml file with validation.
+def load_config():
+    config_file = os.path.join(INSTALL_DIR, "games_config.yml")
+    try:
+        with open(config_file, "r") as f:
+            return yaml.safe_load(f)
+    except FileNotFoundError:
+        print(f"{COLOR['red']}Configuration file not found: {config_file}{COLOR['reset']}")
+        sys.exit(1)
+    except yaml.YAMLError as e:
+        print(f"{COLOR['red']}Error parsing YAML configuration: {e}{COLOR['reset']}")
+        sys.exit(1)
+
+
+# Coordinates the full installation of a single game entry.
+def install_game(game_key, config):
+    dest_dir = os.path.join(INSTALL_DIR, game_key)
+    if os.path.isdir(dest_dir) and os.listdir(dest_dir):
+        confirm = input(f"{COLOR['yellow']}{dest_dir} exists. Overwrite? (y/n): {COLOR['reset']}").lower()
+        if confirm != "y":
+            print(f"{COLOR['yellow']}Skipped {game_key}{COLOR['reset']}")
+            return
+    success = True
+    for step in config.get("steps", []):
+        if not process_step(step, dest_dir):
+            success = False
+            print(f"{COLOR['red']}Error processing step for {game_key}{COLOR['reset']}")
+            break
+    if success:
+        create_launcher(game_key, config, dest_dir)
+        print(f"{COLOR['green']}Installed: {config.get('display_name', game_key)}{COLOR['reset']}")
+    else:
+        print(f"{COLOR['red']}Installation failed for {game_key}{COLOR['reset']}")
+
+
+# Main loop that displays the game list and handles user selection.
 def main():
-	CONFIG_FILE = "games_config.yml"
-	try:
-		with open(CONFIG_FILE, "r") as f:
-			games_config = yaml.safe_load(f)
-	except Exception as e:
-		print(f"{RED}Error loading configuration file: {e}{RESET}")
-		sys.exit(1)
-
-	print(f"{CYAN}Searching for games to install in {INSTALL_DIR}...{RESET}")
-
-	available_games = [(key, config) for key, config in games_config.items()]
-
-	if not available_games:
-		print(f"{RED}No games found in configuration file. Exiting.{RESET}")
-		sys.exit(1)
-
-	print(f"{CYAN}Found games to install:{RESET}")
-	for idx, (key, config) in enumerate(available_games, start=1):
-		print(f"{idx}) {config.get('display_name', key)}")
-
-	print(f"all) Install all games sequentially")
-	print(f"q) Exit menu")
-
-	while True:
-		user_input = input(f"{CYAN}Enter the number of the game to install, 'all' for all games, or 'q' to exit: {RESET}").strip().lower()
-
-		if user_input.isdigit():
-			choice = int(user_input)
-			if 1 <= choice <= len(available_games):
-				key, config = available_games[choice - 1]
-				process_game(key, config)
-				break
-			else:
-				print(f"{RED}Invalid choice. Please try again.{RESET}")
-
-		elif user_input == "all":
-			for key, config in available_games:
-				process_game(key, config)
-			break
-
-		elif user_input == "q":
-			print(f"{YELLOW}Exiting. No installations performed.{RESET}")
-			sys.exit(0)
-
-		else:
-			print(f"{RED}Invalid input. Please try again.{RESET}")
+    if os.geteuid() != 0:
+        print(f"{COLOR['red']}This script must be run as root.{COLOR['reset']}")
+        return
+    try:
+        config = load_config()
+        games = list(config.items())
+        if not games:
+            print(f"{COLOR['red']}No games defined in configuration.{COLOR['reset']}")
+            return
+        while True:
+            print(f"\n{COLOR['cyan']}Lindbergh ROM Installer{COLOR['reset']}")
+            for i, (key, val) in enumerate(games, 1):
+                print(f"{i}) {val.get('display_name', key)}")
+            print("all) Install all games\nq) Quit")
+            choice = input("Select: ").strip().lower()
+            if choice == "q":
+                break
+            elif choice == "all":
+                start = time.time()
+                for idx, (key, val) in enumerate(games, 1):
+                    print(f"\n{COLOR['yellow']}Installing ({idx}/{len(games)}): {val.get('display_name', key)}{COLOR['reset']}")
+                    install_game(key, val)
+                print(f"{COLOR['green']}All installations completed in {time.time() - start:.1f} seconds.{COLOR['reset']}")
+                input("Press Enter to return to menu...")
+            elif choice.isdigit() and 1 <= int(choice) <= len(games):
+                key, val = games[int(choice) - 1]
+                install_game(key, val)
+                input("Press Enter to return to menu...")
+            else:
+                print(f"{COLOR['red']}Invalid choice. Try again.{COLOR['reset']}")
+    finally:
+        safe_unmount()
 
 if __name__ == "__main__":
-	main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        safe_unmount()
+        print(f"\n{COLOR['yellow']}Cancelled by user.{COLOR['reset']}")
