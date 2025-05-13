@@ -1,10 +1,28 @@
+# Lindbergh game configuration for Batocera
+# Format per game entry:
+# game_id:                                  # Unique identifier (used as folder name)
+#   display_name: "Game Name"               # Display name in menu
+#   launcher_path: "elf/path"               # Optional subpath for .game launcher file
+#   steps:                                  # Steps to extract the game
+#     - file: "image.bin"                   # Disk image to mount
+#       filesystem: "ext2"                  # Filesystem type (default: ext2)
+#       copy_dirs:                          # List of folders to extract
+#         - "disk0"
+#       destination_subfolder: "data"       # Optional: put image into a subfolder
+#       extra_copy_dirs:                    # Optional: specific folder mappings
+#         - source: "path/in/image"
+#           destination: "path/in/output"
+#   final_move:                             # Optional final moves after all steps
+#     - source: "source/path"
+#       destination: "destination/path"
+
 # 2 Spicy
-2spicy: # Name used for the .game file
-  display_name: "2 Spicy" # Name Display for the script
-  launcher_path: "elf" # path for the game exec
-  steps: # Steps to perform
+2spicy:
+  display_name: "2 Spicy"
+  launcher_path: "elf"
+  steps:
     - file: "2spicy.bin"
-      filesystem: "ext2" # File system to use for the mount (ext2 by default)
+      filesystem: "ext2"
       copy_dirs:
         - "disk0"
 
@@ -27,8 +45,6 @@ ghostsev:
       copy_dirs:
         - "disk0"
         - "disk1"
-      remove_dirs:
-        - "drv"
 
 # Harley Davidson King of the Road
 hdkotr:
@@ -38,8 +54,6 @@ hdkotr:
     - file: "harley.bin"
       copy_dirs:
         - "disk0"
-      remove_dirs:
-        - "drv"
     - file: "harley_fs.bin"
       copy_dirs: []
       destination_subfolder: "fs"
@@ -56,17 +70,6 @@ hotd4a:
       copy_dirs:
         - "disk0"
 
-# The House of the Dead 4 Special (NO GOOD DUMP FOUND)
-#hotd4sp:
-#  display_name: "The House of the Dead 4 Special"
-#  launcher_path: "elf"
-#  steps:
-#    - file: "hotd4sp.bin"
-#      copy_dirs:
-#        - "disk0"
-#      remove_dirs:
-#        - "drv"
-
 # The House of the Dead EX
 hotdex:
   display_name: "The House of the Dead EX (Japan)"
@@ -75,8 +78,6 @@ hotdex:
     - file: "hotdex.bin"
       copy_dirs:
         - "disk0"
-      remove_dirs:
-        - "drv"
 
 # Hummer Extreme Edition
 hummerxt:
@@ -86,19 +87,6 @@ hummerxt:
     - file: "hummer.bin"
       copy_dirs:
         - "disk0"
-      remove_dirs:
-        - "drv"
-
-# Hummer SDLX (NO GOOD DUMP FOUND)
-#hummer:
-#  display_name: "Hummer SDLX"
-#  launcher_path: ""
-#  steps:
-#    - file: "hummer.bin"
-#      copy_dirs:
-#        - "disk0"
-#      remove_dirs:
-#        - "drv"
 
 # Initial D Arcade Stage 4 (Rev B)
 initiad4b:
@@ -131,8 +119,7 @@ initiad5exa:
       filesystem: "ext3"
       copy_dirs: []
       destination_subfolder: "data"
-      remove_dirs:
-        - "drv"
+
 # Let's Go Jungle
 letsgoju:
   display_name: "Let's Go Jungle"
@@ -142,7 +129,7 @@ letsgoju:
       copy_dirs:
         - "disk0"
 
-# Outrun 2 SP SDX Rev A
+# Outrun 2 SP SDX (Rev A)
 outr2sdx:
   display_name: "Outrun 2 SP SDX (Rev A)"
   launcher_path: "Jennifer"
@@ -150,8 +137,6 @@ outr2sdx:
     - file: "or2.bin"
       copy_dirs:
         - "disk0"
-      remove_dirs:
-        - "drv"
 
 # Outrun 2 SP SDX (Bootleg)
 outr2sdxg:
@@ -161,8 +146,6 @@ outr2sdxg:
     - file: "or2g.bin"
       copy_dirs:
         - "disk0"
-      remove_dirs:
-        - "drv"
 
 # Primeval Hunt
 primevah:
@@ -172,8 +155,6 @@ primevah:
     - file: "primevil.bin"
       copy_dirs:
         - "disk0"
-      remove_dirs:
-        - "drv"
 
 # R-Tuned: Ultimate Street Racing
 rtuned:
@@ -183,9 +164,6 @@ rtuned:
     - file: "rtuned.bin"
       copy_dirs:
         - "disk0"
-      remove_dirs:
-        - "drv"
-        - "drv.old"
 
 # Rambo (Export)
 rambo:
@@ -204,8 +182,6 @@ segartv:
     - file: "segartv.bin"
       copy_dirs:
         - "disk0"
-      remove_dirs:
-        - "drv"
 
 # Virtua Fighter 5
 vf5:
@@ -226,8 +202,6 @@ vf5e:
       copy_dirs:
         - "disk0"
         - "disk1"
-      remove_dirs:
-        - "drv"
     - file: "vf5c_rom.bin"
       copy_dirs: []
       destination_subfolder: "rom"
@@ -241,8 +215,6 @@ vf5fsa2:
       copy_dirs:
         - "disk0"
         - "disk1"
-      remove_dirs:
-        - "drv"
     - file: "vf5fs_ext.bin"
       extra_copy_dirs:
         - source: "rom"
@@ -256,21 +228,9 @@ vf5r:
     - file: "vf5r.bin"
       copy_dirs:
         - "disk0"
-      remove_dirs:
-        - "drv"
     - file: "vf5r_rom.bin"
       copy_dirs: []
       destination_subfolder: "rom"
   final_move:
     - source: "ext/rom/objset"
       destination: "rom/objset"
-
-# Virtua Tennis 3
-# psmash3:
-# display_name: "Virtua Tennis 3 (Rev C)"
-# launcher_path: "vt3_Lindbergh"
-# filesystem: "ext2"
-# steps:
-#  - file: "vt3.bin"
-#    copy_dirs:
-#      - "disk0"
