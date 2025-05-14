@@ -234,3 +234,13 @@ vf5r:
   final_move:
     - source: "ext/rom/objset"
       destination: "rom/objset"
+      
+# Virtua Tennis 3 (Rev C)
+vtennis3:
+  display_name: "Virtua Tennis 3 (Rev C)"
+  launcher_path: "vt3_Lindbergh"
+  steps:
+    - file: "vt3.bin"
+      filesystem: "ext3"
+      copy_dirs:
+        - "disk0"
