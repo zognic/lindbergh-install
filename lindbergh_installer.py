@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-import os, sys, yaml, subprocess, time
+import os
+import sys
+import time
+import yaml
+import subprocess
 
 # ANSI color codes for terminal styling
 COLOR = {
@@ -10,38 +14,39 @@ COLOR = {
     "red": "\033[31m"
 }
 
-# === Global Settings and Constants ===
 INSTALL_DIR = os.getcwd()
 MOUNT_POINT = "/tmp/lindbergh_mount"
 EXCLUDES = ["drv", "drv.old", "lost+found", "System Volume Information"]
 
-# Execute a shell command silently (no output)
+# Run shell command with optional output suppression
+def run(cmd, silent=True):
+    try:
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        if not silent and result.returncode != 0:
+            print(f"{COLOR['red']}Error: {cmd}{COLOR['reset']}")
+            print(result.stderr.strip())
+        return result
+    except Exception as e:
+        print(f"{COLOR['red']}Exception running command: {e}{COLOR['reset']}")
+        return subprocess.CompletedProcess(cmd, 1)
 
-# Runs a shell command silently without producing output.
-def run(cmd):
-    return subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-
-# Attempts to unmount the mount point safely, ignoring errors.
+# Unmounts MOUNT_POINT if currently mounted
 def safe_unmount():
-    run(f"umount {MOUNT_POINT} 2>/dev/null || true")
+    if os.path.ismount(MOUNT_POINT):
+        run(f"umount \"{MOUNT_POINT}\"", silent=False)
 
-# === Main Image Processing Logic ===
-
-# Mounts the image, copies required files and folders, then unmounts.
-# Supports conditional copying of full image content if no specific folders are listed.
+# Mounts and copies from a game image, then unmounts
 def process_step(step, dest):
     image_path = os.path.join(INSTALL_DIR, step["file"])
     fs_type = step.get("filesystem", "ext2")
     subfolder = step.get("destination_subfolder")
 
-    # Skip this step if the image file is missing.
     if not os.path.isfile(image_path):
         print(f"{COLOR['red']}Missing image file: {image_path}{COLOR['reset']}")
         return False
 
+    safe_unmount()
     os.makedirs(MOUNT_POINT, exist_ok=True)
-    # Attempt to mount the image using the specified filesystem.
     if run(f"mount -t {fs_type} \"{image_path}\" \"{MOUNT_POINT}\"").returncode != 0:
         print(f"{COLOR['red']}Failed to mount {image_path}{COLOR['reset']}")
         return False
@@ -57,7 +62,7 @@ def process_step(step, dest):
             dst = os.path.join(dest, subfolder)
             os.makedirs(dst, exist_ok=True)
         tasks.append((src, dst))
-    # If no specific folders to copy are given, copy the whole image to the subfolder.
+
     if not step.get("copy_dirs") and subfolder:
         src = MOUNT_POINT
         dst = os.path.join(dest, subfolder)
@@ -70,8 +75,6 @@ def process_step(step, dest):
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         tasks.append((src, dst))
 
-
-    # Count how many files will be copied, ignoring excluded directories.
     def count_all_files():
         total = 0
         for src, _ in tasks:
@@ -84,7 +87,6 @@ def process_step(step, dest):
         return total
 
     total_files = count_all_files()
-    # If nothing to copy, skip the rest of the step.
     if total_files == 0:
         print(f"{COLOR['yellow']}Nothing to copy from {image_path}{COLOR['reset']}")
         safe_unmount()
@@ -99,11 +101,10 @@ def process_step(step, dest):
             print(f"{COLOR['yellow']}Warning: Source path does not exist: {src}{COLOR['reset']}")
             continue
 
-        cmd = [
-            "rsync", "-a", "--no-inc-recursive", "--out-format=%n",
-            *[f"--exclude={e}" for e in EXCLUDES],
-            f"{src}/", f"{dst}/"
-        ]
+        cmd = ["rsync", "-a", "--checksum", "--inplace", "--no-inc-recursive", "--out-format=%n"]
+        cmd += [f"--exclude={e}" for e in EXCLUDES]
+        cmd += [f"{src}/", f"{dst}/"]
+
         try:
             with subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True) as p:
                 for _ in p.stdout:
@@ -115,25 +116,21 @@ def process_step(step, dest):
         except Exception as e:
             print(f"\n{COLOR['red']}Error during copy: {e}{COLOR['reset']}")
 
-    if copied < total_files:
-        bar = "#" * 25
-        print("\r[{}] 100%".format(bar), end="", flush=True)
-
     print()
     safe_unmount()
     return True
 
-
-# Creates a placeholder .game file so Batocera can detect the game.
+# Create a .game file in destination folder
 def create_launcher(game_key, config, dest_dir):
     launcher_path = config.get("launcher_path", "")
     target_dir = os.path.join(dest_dir, launcher_path) if launcher_path else dest_dir
     os.makedirs(target_dir, exist_ok=True)
     launcher_file = os.path.join(target_dir, f"{game_key}.game")
+    if os.path.exists(launcher_file):
+        print(f"{COLOR['yellow']}Launcher already exists: {launcher_file}{COLOR['reset']}")
     with open(launcher_file, "w") as f:
         f.write(f"# Launcher for {game_key}\n")
     print(f"{COLOR['green']}Launcher created: {launcher_file}{COLOR['reset']}")
-
 
 # Loads and parses the games_config.yml file with validation.
 def load_config():
@@ -145,9 +142,8 @@ def load_config():
         print(f"{COLOR['red']}Configuration file not found: {config_file}{COLOR['reset']}")
         sys.exit(1)
     except yaml.YAMLError as e:
-        print(f"{COLOR['red']}Error parsing YAML configuration: {e}{COLOR['reset']}")
+        print(f"{COLOR['red']}Error parsing YAML: {e}{COLOR['reset']}")
         sys.exit(1)
-
 
 # Coordinates the full installation of a single game entry.
 def install_game(game_key, config):
@@ -169,8 +165,7 @@ def install_game(game_key, config):
     else:
         print(f"{COLOR['red']}Installation failed for {game_key}{COLOR['reset']}")
 
-
-# Main loop that displays the game list and handles user selection.
+# Interactive menu
 def main():
     if os.geteuid() != 0:
         print(f"{COLOR['red']}This script must be run as root.{COLOR['reset']}")
