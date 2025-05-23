@@ -124,6 +124,10 @@ def install_game(key, config):
         if input(f"{COLOR['yellow']}{dest} exists. Overwrite? (y/n): {COLOR['reset']}").lower() != "y":
             print(f"{COLOR['yellow']}Skipped {key}{COLOR['reset']}")
             return
+    # Temporarily exclude libs for Let's Go Jungle (allows Batocera's libs with shadow fix)
+    orig_excludes = EXCLUDES.copy()
+    if key == "letsgoju":
+        EXCLUDES.extend(["libCg.so", "libCgGL.so"])
     mounts = mount_all_images(steps)
     try:
         for i, (step, mnt) in enumerate(zip(steps, mounts), start=1):
@@ -132,6 +136,8 @@ def install_game(key, config):
                 return
     finally:
         safe_unmount_all(mounts)
+        # Restore global EXCLUDES after extraction
+        EXCLUDES[:] = orig_excludes
     create_launcher(key, config, dest)
     print(f"{COLOR['green']}Installed: {config.get('display_name', key)}{COLOR['reset']}")
 
