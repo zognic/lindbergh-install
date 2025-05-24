@@ -69,6 +69,16 @@ hotd4a:
     - file: "hotd4.bin"
       copy_dirs:
         - "disk0"
+        
+# The House of the Dead 4 - Special
+hotd4sp:
+  display_name: "The House of the Dead 4 - Special"
+  launcher_path: "elf"
+  steps:
+    - file: "hotd4sp.bin"
+      filesystem: "ext3"
+      copy_dirs:
+        - "disk0"
 
 # The House of the Dead EX
 hotdex:
@@ -128,6 +138,15 @@ letsgoju:
     - file: "lgj.bin"
       copy_dirs:
         - "disk0"
+        
+# Let's Go Jungle - Special
+letsgojusp:
+  display_name: "Let's Go Jungle - Special"
+  launcher_path: ""
+  steps:
+    - file: "letsgojusp.bin"
+      filesystem: "ext3"
+      copy_dirs: []
 
 # Outrun 2 SP SDX (Rev A)
 outr2sdx:
