@@ -49,8 +49,11 @@ def mount_all_images(steps):
 
 # Run rsync for each (src, dst) showing a single overall progress bar
 def run_rsync_overall(tasks):
+    if not tasks:
+        return True
     total = len(tasks)
     last_pct = -1
+    proc = None
     for idx, (src, dst) in enumerate(tasks, start=1):
         os.makedirs(dst, exist_ok=True)
         cmd = [
@@ -74,15 +77,19 @@ def run_rsync_overall(tasks):
         bar = f"{COLOR['green']}{full}{COLOR['reset']}"
         print(f"\r[{bar}] 100%", end="", flush=True)
     print()
-    return proc.returncode == 0
+    return proc is not None and proc.returncode == 0
 
 # Copy directories from mount_dir into dest, showing step and filename
 def process_step(step, dest, step_idx, total_steps, mount_dir):
     base_dst = (os.path.join(dest, step.get('destination_subfolder', '')) if step.get('destination_subfolder') else dest)
     tasks = []
-    for folder in step.get('copy_dirs', []):
-        tasks.append((os.path.join(mount_dir, folder), base_dst))
-    if not step.get('copy_dirs') and step.get('destination_subfolder'):
+    copy_dirs = step.get('copy_dirs', [])
+    # If copy_dirs has items, copy specified folders
+    if copy_dirs:
+        for folder in copy_dirs:
+            tasks.append((os.path.join(mount_dir, folder), base_dst))
+    # If copy_dirs exists (even if empty) or has destination_subfolder, copy all content
+    elif 'copy_dirs' in step or step.get('destination_subfolder'):
         tasks.append((mount_dir, base_dst))
     for entry in step.get('extra_copy_dirs', []):
         src = os.path.join(mount_dir, entry['source'])
