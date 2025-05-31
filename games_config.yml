@@ -89,6 +89,16 @@ hotdex:
       copy_dirs:
         - "disk0"
 
+# Hummer
+hummer:
+  display_name: "Hummer"
+  launcher_path: ""
+  steps:
+    - file: "humm.bin"
+      filesystem: "ext3"
+      copy_dirs:
+        - "disk0"
+
 # Hummer Extreme Edition
 hummerxt:
   display_name: "Hummer Extreme Edition"
