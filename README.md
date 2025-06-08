@@ -22,25 +22,26 @@ This Python script automates the installation of games for Lindbergh systems on 
 | After Burner Climax (SDX)       | abclisdx   | abc.bin (disk0, disk1)            |                   | ext2       |
 | Ghost Squad Evolution           | ghostsev   | gsevo.bin (disk0, disk1)          | vsg_l             | ext2       |
 | Harley Davidson King of the Road | hdkotr    | harley.bin, harley_fs.bin, harley_fs2.bin | elf       | ext2       |
-| The House of the Dead 4 (Rev A) | hotd4      | hotd4.bin                         | elf               | ext2       |
-| The House of the Dead 4 Special | hotd4sp    | hotd4sp.bin                       | elf               | ext2       |
-| The House of the Dead EX        | hotdex     | hotd4ex.bin                       | elf               | ext2       |
+| The House of the Dead 4 (Rev A) | hotd4a     | hotd4.bin                         | elf               | ext2       |
+| The House of the Dead 4 Special | hotd4sp    | hotd4sp.bin                       | elf               | ext3       |
+| The House of the Dead EX (JAPAN) | hotdex    | hotd4ex.bin                       | elf               | ext2       |
 | Hummer Extreme Edition          | hummerxt   | hummer.bin                        |                   | ext2       |
-| Hummer, Hummer SDLX             | hummer     | hummer.bin                        |                   | ext2       |
+| Hummer                          | hummer     | humm.bin                          |                   | ext3       |
 | Initial D Arcade Stage 4 (Rev B)| initiad4b  | id4.bin                           |                   | ext2       |
 | Initial D 4 (Export) (Rev D)    | initiad4ex | id4exp.bin                        |                   | ext2       |
 | Initial D 5 (Export) (2.0)      | initiad5exa| initiald5.bin, id5_data.bin       | data              | ext3       |
 | Let's Go Jungle                 | letsgoju   | lgj.bin                           |                   | ext2       |
-| Outrun 2 SP SDX Rev A           | outr2sdx   | or2.bin                           | Jennifer          | ext2       |
+| Let's Go Jungle - Special       | letsgojusp | letsgojusp.bin                    |                   | ext3       |
+| Outrun 2 SP SDX (Rev A)         | outr2sdx   | or2.bin                           | Jennifer          | ext2       |
 | Outrun 2 SP SDX (Bootleg)       | outr2sdxg  | or2g.bin                          | Jennifer          | ext2       |
 | Primeval Hunt                   | primevah   | primevil.bin                      | prog              | ext2       |
 | R-Tuned: Ultimate Street Racing | rtuned     | rtuned.bin                        |                   | ext2       |
 | Rambo (Export)                  | rambo      | rambo.bin                         | elf               | ext2       |
 | Sega Race-TV (Export)           | segartv    | segartv.bin                       |                   | ext2       |
 | Virtua Fighter 5                | vf5        | vf5.bin (disk0, disk1)            |                   | ext2       |
-| Virtua Fighter 5 Rev C          | vf5c       | vf5c.bin, vf5c_rom.bin            | rom               | ext2       |
-| Virtua Fighter 5 Final Showdown | vf5fs      | vf5fs.bin, vf5fs_ext.bin          | rom               | ext2       |
-| Virtua Fighter 5 R              | vf5r       | vf5r.bin, vf5r_rom.bin            | rom               | ext2       |
+| Virtua Fighter 5 (Rev E)(ver C) | vf5e       | vf5c.bin, vf5c_rom.bin            | rom               | ext2       |
+| Virtua Fighter 5 Final Showdown (Rev A, v2.0) | vf5fsa2 | vf5fs.bin, vf5fs_ext.bin | rom          | ext2       |
+| Virtua Fighter 5 R (Rev G)      | vf5r       | vf5r.bin, vf5r_rom.bin            | rom               | ext2       |
 | Virtua Tennis 3                 | vtennis3   | vt3.bin                           | vt3_Lindbergh     | ext3       |
 
 ## Looking for the right files?
