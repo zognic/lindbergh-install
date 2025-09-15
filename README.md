@@ -94,8 +94,8 @@ hdkotr:
 - For games with multiple .bin files, the script processes each file according to the specified steps, including post-processing actions like file moves.
 - If the target directory for a game already exists, the script skips the installation to avoid overwriting existing data.
 - Launcher files (.game) are automatically created at the specified launcher_path in the configuration file or in the root directory if no launcher_path is provided.
-- Both Hummer SLDX and Hummer Extreme Edition use the same hummer.bin file. This installer does not distinguish between the two versions automatically.
-It is up to you to identify which version you have and select the correct option in the installer accordingly.
+- The `vt3.bin` file from the **Yellow Set archive** is not working properly and will cause the game to fail.
+Please use the other archive link provided above for a working version of Virtua Tennis 3.
 
 
 ## Youtube Explanation
