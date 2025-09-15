@@ -45,7 +45,7 @@ This Python script automates the installation of games for Lindbergh systems on 
 | Virtua Tennis 3                 | vtennis3   | vt3.bin                           | vt3_Lindbergh     | ext3       |
 
 ## Looking for the right files?
-If you're looking for the correct files for installation, performing a quick search with the keyword **lindberghromsbinbatocera** or **SEGA_Lindbergh_YELLOW-RomVault** on Archives  may help you locate the appropriate `.bin` files needed for this script.
+You're looking for the correct files for installation, performing a quick search on the "archive.org" website with the keyword **lindberghromsbinbatocera** or **SEGA_Lindbergh_YELLOW-RomVault** may help you locate the appropriate `.bin` files needed for this script.
 
 
 ## Configuration Example (YAML)
