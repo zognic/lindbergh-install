@@ -122,6 +122,16 @@ def load_config():
         print(f"{COLOR['red']}Failed to load config: {e}{COLOR['reset']}")
         sys.exit(1)
 
+def game_exists(config):
+    steps = config.get("steps", [])
+    image_paths = [os.path.join(INSTALL_DIR, step["file"]) for step in steps]
+    missing_files = [os.path.basename(path) for path in image_paths if not os.path.exists(path)]
+    if missing_files:
+        print(f"{COLOR['yellow']}Missing {','.join(missing_files)}{COLOR['reset']}")
+        return False
+    return True
+
+
 # Install a single game: mount images, extract files, unmount, then create launcher
 def install_game(key, config):
     dest = os.path.join(INSTALL_DIR, key)
@@ -173,6 +183,9 @@ def main():
         elif choice == "all":
             for idx, (key, val) in enumerate(games, 1):
                 print(f"\n{COLOR['yellow']}Installing ({idx}/{len(games)}): {val.get('display_name', key)}{COLOR['reset']}")
+                if not game_exists(val):
+                    print(f"{COLOR['yellow']}Skipped {val.get('display_name', key)}{COLOR['reset']}")
+                    continue
                 install_game(key, val)
             input("Press Enter to return to menu…")
         elif choice.isdigit() and 1 <= int(choice) <= len(games):
