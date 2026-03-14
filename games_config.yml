@@ -36,9 +36,9 @@ abclisdx:
         - "disk0"
         - "disk1"
 
-# Ghost Squad Evolution
-ghostsev:
-  display_name: "Ghost Squad Evolution"
+# Ghost Squad Evolution (Japan)
+ghostsevj:
+  display_name: "Ghost Squad Evolution (Japan)"
   launcher_path: "vsg_l"
   steps:
     - file: "gsevo.bin"
